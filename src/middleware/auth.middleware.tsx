@@ -2,7 +2,6 @@ import FBStoreService from "../service/FBStoreService";
 import FBStorageService from "../service/FBStorageService";
 import StorageMiddleware from "./storage.middleware";
 import UpdateUserDto from "../dto/user-update.body";
-import { useState } from "react";
 import UserEntityDTO from "../entity/user.entity";
 import CreateUserDTO from "../dto/user-create.body";
 
@@ -13,7 +12,7 @@ export default class AuthMiddleware {
     ) { }
 
     async createUser(id: string, body: CreateUserDTO) {
-        const { name, profile, phoneNumber } = body;
+        const { name, profile, phoneNumber, area } = body;
         const storeage = new StorageMiddleware();
         const imageUrl = await storeage.uploadSigleImage(profile, 'User')
 
@@ -21,6 +20,7 @@ export default class AuthMiddleware {
             id: id,
             phoneNumber: phoneNumber,
             name: name,
+            area: area,
             profile: imageUrl
         });
 
@@ -32,7 +32,7 @@ export default class AuthMiddleware {
 
 
     async updateUser(id: string, body: UpdateUserDto) {
-        const { name, profile, phoneNumber } = body;
+        const { name, profile, phoneNumber, area } = body;
         let imageUrl = undefined;
 
         if (profile) {
@@ -49,6 +49,7 @@ export default class AuthMiddleware {
         const res = await this.firebaseStore.UpdateStoreData({
             name: name,
             phoneNumber: phoneNumber,
+            area: area,
             profile: imageUrl
         }, "User");
 

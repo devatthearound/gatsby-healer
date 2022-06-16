@@ -8,3 +8,8 @@ declare global {
     confirmationResult: ConfirmationResult;
   }
 }
+
+declare module "*.json" {
+  const value: any;
+  export default value;
+}

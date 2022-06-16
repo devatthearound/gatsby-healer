@@ -7,13 +7,7 @@ import AuthMiddleware from "../middleware/auth.middleware";
 import NameInputForm from "../container/NameInputForm";
 import ImageUpload from "../container/ImageUpload";
 import CreateUserDTO from "../dto/user-create.body";
-
-type FormDTO = {
-    phoneNumber: string
-    code: string
-    name: string
-    profile: File
-}
+import AdministrativeDistrict from "../utils/korea-administrative-district.json";
 
 const SignIn = () => {
     const authMiddleware = new AuthMiddleware();
@@ -31,6 +25,7 @@ const SignIn = () => {
     const [form, setForm] = useState<CreateUserDTO>({
         phoneNumber: '',
         name: '',
+        area: '',
         profile: {} as File
     });
 
@@ -45,7 +40,11 @@ const SignIn = () => {
         } else {
             setForm({ ...form, [name]: value });
         }
+    }
 
+    const handlerOnSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = e.target
+        setForm({ ...form, [name]: value });
     }
 
     const sendAuthCode = async () => {
@@ -79,6 +78,15 @@ const SignIn = () => {
             <PhoneNumberInputForm value={form.phoneNumber} onChange={handlerOnChange} sendAuthCode={sendAuthCode} />
             <PhoneNumberAuthForm value={code} onChange={(e) => setCode(e.target.value)} verifiAuthCode={verifiAuthCode} />
             <NameInputForm value={form.name} onChange={handlerOnChange} onSubmit={hanlderOnSubmit} />
+            <select value={form.area} onChange={handlerOnSelect}>
+                {
+                    AdministrativeDistrict.data.map((item) => (
+                        item.서울특별시?.map((item2, key) => (
+                            <option key={key} value={item2}>{item2}</option>
+                        ))
+                    ))
+                }
+            </select>
             <ImageUpload onChange={handlerOnChange} style={{ width: "100%" }} />
             <button onClick={signOut}>로그아웃</button>
         </>
