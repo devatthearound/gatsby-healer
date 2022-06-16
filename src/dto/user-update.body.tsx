@@ -1,3 +1,5 @@
 import UserDTO from "./user-create.body";
 
-export default interface UpdateUserDto extends UserDTO { }
+type UpdateUserDto = Partial<UserDTO>;
+
+export default UpdateUserDto

@@ -1,6 +1,6 @@
 type CreateUserDTO = {
     name: string
-    profile: File | string
+    profile: File
     phoneNumber: string
 }
 
