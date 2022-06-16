@@ -50,8 +50,8 @@ const SignIn = () => {
     }
 
     const hanlderOnSubmit = async () => {
-        const res = await authMiddleware.createUser(userId, form.phoneNumber, form.name);
-        if (res) navigate('/home');
+       // const res = await authMiddleware.createUser(userId, form.phoneNumber, form.name);
+        //if (res) navigate('/home');
     }
 
     return (

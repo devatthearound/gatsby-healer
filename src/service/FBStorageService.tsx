@@ -4,7 +4,7 @@ import firebase from './FBConfig';
 const firestorage: FirebaseStorage = getStorage(firebase, "gs://test-healer.appspot.com");
 
 const StorageService = {
-    UploadSigleImage: async (ImageFile: File, location: string) => {
+    UploadSigleImage: async (ImageFile: File, location: string): Promise<string> => {
         try {
             const refStorage = ref(firestorage, location + "/" + ImageFile.name);
             const downloadUrlPromise = await uploadBytes(refStorage, ImageFile).then(async (res) => {
@@ -15,12 +15,9 @@ const StorageService = {
 
         } catch (err: unknown) {
             if (err instanceof Error) {
-                console.log(err);
-                return {
-                    error: err.message,
-                };
+                throw new Error(err.message);
             } else {
-                return { error: "error" }
+                throw new Error("알 수 없는 오류입니다.");
             }
         }
     },
