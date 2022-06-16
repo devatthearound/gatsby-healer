@@ -39,4 +39,16 @@ export default class StorageMiddleware {
 
         }
     }
+
+    async deleteImage(imageUrl: string): Promise<string | undefined> {
+        try {
+            return await this.firebaseStorage.DeleteImage(imageUrl);
+        } catch (e) {
+            if (e instanceof Error) {
+                alert(e.message);
+            } else {
+                alert("이미지가 삭제되지 않았습니다")
+            }
+        }
+    }
 }
