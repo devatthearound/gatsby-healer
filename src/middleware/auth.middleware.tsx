@@ -12,12 +12,13 @@ export default class AuthMiddleware {
         private readonly firebaseStorage = FBStorageService,
     ) { }
 
-    async createUser(body: CreateUserDTO) {
+    async createUser(id: string, body: CreateUserDTO) {
         const { name, profile, phoneNumber } = body;
         const storeage = new StorageMiddleware();
         const imageUrl = await storeage.uploadSigleImage(profile, 'User')
 
         const res = await this.firebaseStore.CreateStoreData("usersCollection", {
+            id: id,
             phoneNumber: phoneNumber,
             name: name,
             profile: imageUrl

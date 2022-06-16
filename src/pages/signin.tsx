@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import FBSMSService from '../service/FBSMSService';
 import PhoneNumberInputForm from "../container/PhoneNumberInputForm";
 import PhoneNumberAuthForm from "../container/PhoneNumberAuthForm";
 import { useAuth } from "../hooks/SMSProvider";
@@ -7,6 +6,7 @@ import { navigate } from "gatsby"
 import AuthMiddleware from "../middleware/auth.middleware";
 import NameInputForm from "../container/NameInputForm";
 import ImageUpload from "../container/ImageUpload";
+import CreateUserDTO from "../dto/user-create.body";
 
 type FormDTO = {
     phoneNumber: string
@@ -19,6 +19,7 @@ const SignIn = () => {
     const authMiddleware = new AuthMiddleware();
     const { SignInWithPhoneNumber, ConfirmationResult, LoginOut } = useAuth();
     const { user } = useAuth();
+    const [code, setCode] = useState<string>('');
     const [userId, setUserId] = useState<string>('');
 
     // useEffect(() => {
@@ -27,9 +28,8 @@ const SignIn = () => {
     //     }
     // })
 
-    const [form, setForm] = useState<FormDTO>({
+    const [form, setForm] = useState<CreateUserDTO>({
         phoneNumber: '',
-        code: '',
         name: '',
         profile: {} as File
     });
@@ -53,7 +53,7 @@ const SignIn = () => {
     };
 
     const verifiAuthCode = async () => {
-        const res = await ConfirmationResult(form.code);
+        const res = await ConfirmationResult(code);
         setUserId(res);
     };
 
@@ -62,7 +62,7 @@ const SignIn = () => {
     }
 
     const hanlderOnSubmit = async () => {
-        const res = await authMiddleware.createUser(userId, form.phoneNumber, form.name, form.profile);
+        const res = await authMiddleware.createUser(userId, form);
         if (res) navigate('/home');
     }
 
@@ -77,7 +77,7 @@ const SignIn = () => {
         // home 화면으로 이동
         <>
             <PhoneNumberInputForm value={form.phoneNumber} onChange={handlerOnChange} sendAuthCode={sendAuthCode} />
-            <PhoneNumberAuthForm value={form.code} onChange={handlerOnChange} verifiAuthCode={verifiAuthCode} />
+            <PhoneNumberAuthForm value={code} onChange={(e) => setCode(e.target.value)} verifiAuthCode={verifiAuthCode} />
             <NameInputForm value={form.name} onChange={handlerOnChange} onSubmit={hanlderOnSubmit} />
             <ImageUpload onChange={handlerOnChange} style={{ width: "100%" }} />
             <button onClick={signOut}>로그아웃</button>
