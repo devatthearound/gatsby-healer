@@ -6,11 +6,13 @@ import { useAuth } from "../hooks/SMSProvider";
 import { navigate } from "gatsby"
 import AuthMiddleware from "../middleware/auth.middleware";
 import NameInputForm from "../container/NameInputForm";
+import ImageUpload from "../container/ImageUpload";
 
 type FormDTO = {
     phoneNumber: string
     code: string
     name: string
+    profile: File
 }
 
 const SignIn = () => {
@@ -28,12 +30,22 @@ const SignIn = () => {
     const [form, setForm] = useState<FormDTO>({
         phoneNumber: '',
         code: '',
-        name: ''
+        name: '',
+        profile: {} as File
     });
 
+    useEffect(() => {
+        console.log(form);
+    }, [form])
+
     const handlerOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setForm({ ...form, [name]: value });
+        const { name, value, files } = e.target
+        if (files) {
+            setForm({ ...form, [name]: files[0] });
+        } else {
+            setForm({ ...form, [name]: value });
+        }
+
     }
 
     const sendAuthCode = async () => {
@@ -50,8 +62,8 @@ const SignIn = () => {
     }
 
     const hanlderOnSubmit = async () => {
-       // const res = await authMiddleware.createUser(userId, form.phoneNumber, form.name);
-        //if (res) navigate('/home');
+        const res = await authMiddleware.createUser(userId, form.phoneNumber, form.name, form.profile);
+        if (res) navigate('/home');
     }
 
     return (
@@ -67,6 +79,7 @@ const SignIn = () => {
             <PhoneNumberInputForm value={form.phoneNumber} onChange={handlerOnChange} sendAuthCode={sendAuthCode} />
             <PhoneNumberAuthForm value={form.code} onChange={handlerOnChange} verifiAuthCode={verifiAuthCode} />
             <NameInputForm value={form.name} onChange={handlerOnChange} onSubmit={hanlderOnSubmit} />
+            <ImageUpload onChange={handlerOnChange} style={{ width: "100%" }} />
             <button onClick={signOut}>로그아웃</button>
         </>
     )
