@@ -26,7 +26,7 @@ const defaultValue: Value = {
 
 export const smsAuthContext = createContext<Value>(defaultValue);
 
-export const useAuth: any = () => {
+export const useAuth = ():Value => {
     return useContext(smsAuthContext);
 }
 
@@ -52,7 +52,6 @@ export const SMSAuthProvider = (props: { children: React.ReactNode }) => {
         try {
             const res = await SMSService.ConfirmationResult(verificode);
             setUser(res);
-
             return res.uid;
         } catch (e: unknown) {
             if (e instanceof Error) {
