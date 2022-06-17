@@ -6,5 +6,6 @@ type UpdateProductDto = {
     price: number
     content: string
     images: [File | string]
+    state: string
 }
 export default UpdateProductDto

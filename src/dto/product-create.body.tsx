@@ -3,6 +3,7 @@ type CreateProductDTO = {
     price: number
     content: string
     images: File[]
+    state: string
 }
 
 export default CreateProductDTO
