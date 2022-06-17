@@ -1,4 +1,5 @@
 type UserEntityDTO = {
+    id: string
     name: string
     profile: string
     phoneNumber: string
