@@ -46,12 +46,12 @@ export default class AuthMiddleware {
             if (isDelete && isUpload) imageUrl = isUpload;
         }
 
-        const res = await this.firebaseStore.UpdateStoreData({
+        const res = await this.firebaseStore.UpdateStoreData("User", id, {
             name: name,
             phoneNumber: phoneNumber,
             area: area,
             profile: imageUrl
-        }, "User");
+        });
 
         if (!res) alert("유저 생성에 실패했습니다.");
 

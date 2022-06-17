@@ -8,13 +8,13 @@ import ProductEntityDTO from "../entity/product.entity";
 export default class ProductMiddleware {
     constructor(
         private readonly firebaseStore = FBStoreService,
-        private readonly firebaseStorage = FBStorageService,
+        private readonly firebaseStorage = FBStorageService
     ) { }
 
-    async createProduct(userId: string, body: CreateProductDTO) {
+    async createProduct(body: CreateProductDTO) {
         const { title, price, content, images } = body;
         const storeage = new StorageMiddleware();
-        const imageUrls = await storeage.uploadMultipleImage(images, 'Product/' + userId)
+        const imageUrls = await storeage.uploadMultipleImage(images, 'Product')
 
         const res = await this.firebaseStore.CreateStoreData("Product", {
             title: title,
@@ -51,7 +51,6 @@ export default class ProductMiddleware {
             if (isDelete && isUpload) imageUrls = isUpload;
         }
 
-
         const res = await this.firebaseStore.CreateStoreData("Product", {
             title: title,
             price: price,
@@ -60,6 +59,13 @@ export default class ProductMiddleware {
         });
 
         if (!res) alert("유저 생성에 실패했습니다.");
+
+        return res;
+    }
+
+    async deleteProduct(id: string) {
+        const res = await this.firebaseStore.RemoveStoreData(id, "Product");
+        if (!res) alert("유저 삭제에 실패했습니다.");
 
         return res;
     }
